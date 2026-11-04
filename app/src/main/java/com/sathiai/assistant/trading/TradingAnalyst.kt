@@ -39,7 +39,8 @@ class TradingAnalyst(private val secureStorage: SecureStorage) {
             """.trimIndent()
 
             val jsonBody = JSONObject().apply {
-                put("model", "meta-llama/llama-3.3-70b-instruct:free")
+                // একদম স্ট্যাবল ফ্রি মডেল
+                put("model", "google/gemma-2-9b-it:free") 
                 put("messages", org.json.JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
