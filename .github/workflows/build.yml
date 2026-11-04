@@ -7,13 +7,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Unzip Project
         run: unzip SathiAI.zip
-      - name: Clean Termux Cache
+      - name: Clean Termux Cache & Add Nav Dependency
         run: |
           rm -rf SathiAI/.gradle
           rm -rf SathiAI/build
           rm -rf SathiAI/app/build
           rm -f SathiAI/local.properties
           sed -i '/android.aapt2FromMavenOverride/d' SathiAI/gradle.properties
+          sed -i '/dependencies {/a \    implementation("androidx.navigation:navigation-compose:2.8.4")' SathiAI/app/build.gradle.kts
       - uses: actions/setup-java@v4
         with:
           java-version: '17'
