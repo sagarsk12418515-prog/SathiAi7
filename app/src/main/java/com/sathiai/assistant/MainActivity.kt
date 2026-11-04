@@ -11,7 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sathiai.assistant.companion.Companion
+import com.sathiai.assistant.security.SecureStorage
+import com.sathiai.assistant.ui.screens.ChatScreen
 import com.sathiai.assistant.ui.screens.HomeScreen
+import com.sathiai.assistant.ui.screens.SettingsScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -26,9 +30,27 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+                    val secureStorage = SecureStorage(this)
+                    val companion = Companion(secureStorage)
+
                     NavHost(navController = navController, startDestination = "home") {
                         composable("home") {
-                            HomeScreen()
+                            HomeScreen(
+                                onChatClick = { navController.navigate("chat") },
+                                onSettingsClick = { navController.navigate("settings") }
+                            )
+                        }
+                        composable("chat") {
+                            ChatScreen(
+                                companion = companion,
+                                onBack = { navController.popBackStack() }
+                            )
+                        }
+                        composable("settings") {
+                            SettingsScreen(
+                                secureStorage = secureStorage,
+                                onBack = { navController.popBackStack() }
+                            )
                         }
                     }
                 }
