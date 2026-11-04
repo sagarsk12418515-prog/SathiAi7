@@ -1,6 +1,8 @@
 package com.sathiai.assistant.data
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
@@ -32,4 +34,21 @@ abstract class SathiDatabase : RoomDatabase() {
     abstract fun mistakeDao(): MistakeDao
     abstract fun tradeDao(): TradeDao
     abstract fun knowledgeDao(): KnowledgeDao
+
+    companion object {
+        @Volatile
+        private var INSTANCE: SathiDatabase? = null
+
+        fun getDatabase(context: Context): SathiDatabase {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    SathiDatabase::class.java,
+                    "sathi_database"
+                ).build()
+                INSTANCE = instance
+                instance
+            }
+        }
+    }
 }
