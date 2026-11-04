@@ -36,7 +36,7 @@ fun SettingsScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "OpenAI API Key দিন",
+                text = "Gemini API Key দিন",
                 color = Color(0xFF80CBC4),
                 fontSize = 20.sp
             )
@@ -48,7 +48,7 @@ fun SettingsScreen(
                     apiKey = it 
                     isSaved = false
                 },
-                label = { Text("sk-...") },
+                label = { Text("AIza...") },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
