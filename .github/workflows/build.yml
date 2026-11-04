@@ -15,7 +15,10 @@ jobs:
           rm -rf SathiAI/app/build
           rm -f SathiAI/local.properties
           sed -i '/android.aapt2FromMavenOverride/d' SathiAI/gradle.properties
+          
+          # নেভিগেশন এবং সিকিউরিটি লাইব্রেরি যুক্ত করা
           sed -i '/dependencies {/a \    implementation("androidx.navigation:navigation-compose:2.8.4")' SathiAI/app/build.gradle.kts
+          sed -i '/dependencies {/a \    implementation("androidx.security:security-crypto:1.1.0-alpha06")' SathiAI/app/build.gradle.kts
       - uses: actions/setup-java@v4
         with:
           java-version: '17'
@@ -27,7 +30,6 @@ jobs:
       - name: Build with Gradle
         run: |
           cd SathiAI
-          chmod +x gradlew || true
           gradle assembleDebug --no-daemon
       - name: Upload APK
         uses: actions/upload-artifact@v4
