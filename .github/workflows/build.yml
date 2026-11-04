@@ -7,8 +7,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Unzip Project
         run: unzip SathiAI.zip
-      - name: Clean Termux Cache & Add Nav Dependency
+      - name: Sync All Files & Add Dependencies
         run: |
+          cp -r app SathiAI/
           rm -rf SathiAI/.gradle
           rm -rf SathiAI/build
           rm -rf SathiAI/app/build
