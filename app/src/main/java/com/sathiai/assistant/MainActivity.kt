@@ -13,9 +13,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sathiai.assistant.companion.Companion
 import com.sathiai.assistant.security.SecureStorage
+import com.sathiai.assistant.trading.TradingAnalyst
 import com.sathiai.assistant.ui.screens.ChatScreen
 import com.sathiai.assistant.ui.screens.HomeScreen
 import com.sathiai.assistant.ui.screens.SettingsScreen
+import com.sathiai.assistant.ui.screens.TradingScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -32,25 +34,24 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     val secureStorage = SecureStorage(this)
                     val companion = Companion(secureStorage)
+                    val tradingAnalyst = TradingAnalyst(secureStorage)
 
                     NavHost(navController = navController, startDestination = "home") {
                         composable("home") {
                             HomeScreen(
                                 onChatClick = { navController.navigate("chat") },
+                                onTradingClick = { navController.navigate("trading") },
                                 onSettingsClick = { navController.navigate("settings") }
                             )
                         }
                         composable("chat") {
-                            ChatScreen(
-                                companion = companion,
-                                onBack = { navController.popBackStack() }
-                            )
+                            ChatScreen(companion = companion, onBack = { navController.popBackStack() })
+                        }
+                        composable("trading") {
+                            TradingScreen(tradingAnalyst = tradingAnalyst, onBack = { navController.popBackStack() })
                         }
                         composable("settings") {
-                            SettingsScreen(
-                                secureStorage = secureStorage,
-                                onBack = { navController.popBackStack() }
-                            )
+                            SettingsScreen(secureStorage = secureStorage, onBack = { navController.popBackStack() })
                         }
                     }
                 }
