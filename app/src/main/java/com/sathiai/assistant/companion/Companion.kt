@@ -16,10 +16,13 @@ class Companion(private val secureStorage: SecureStorage) {
             ?: return@withContext "দুঃখিত ভাই, আমার API Key সেট করা নেই।"
 
         try {
-            val url = URL("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$apiKey")
+            val url = URL("https://openrouter.ai/api/v1/chat/completions")
             val conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
+            conn.setRequestProperty("Authorization", "Bearer $apiKey")
+            conn.setRequestProperty("HTTP-Referer", "https://github.com")
+            conn.setRequestProperty("X-Title", "SathiAI")
             conn.doOutput = true
 
             val systemPrompt = """
@@ -32,13 +35,14 @@ class Companion(private val secureStorage: SecureStorage) {
             """.trimIndent()
 
             val jsonBody = JSONObject().apply {
-                put("contents", org.json.JSONArray().apply {
+                put("model", "meta-llama/llama-3.3-70b-instruct:free")
+                put("messages", org.json.JSONArray().apply {
                     put(JSONObject().apply {
-                        put("parts", org.json.JSONArray().apply {
-                            put(JSONObject().apply { put("text", systemPrompt) })
-                        })
+                        put("role", "system")
+                        put("content", systemPrompt)
                     })
                 })
+                put("temperature", 0.7)
             }
 
             val writer = OutputStreamWriter(conn.outputStream)
@@ -52,12 +56,10 @@ class Companion(private val secureStorage: SecureStorage) {
                 reader.close()
 
                 val jsonResponse = JSONObject(response)
-                return@withContext jsonResponse.getJSONArray("candidates")
+                return@withContext jsonResponse.getJSONArray("choices")
                     .getJSONObject(0)
-                    .getJSONObject("content")
-                    .getJSONArray("parts")
-                    .getJSONObject(0)
-                    .getString("text")
+                    .getJSONObject("message")
+                    .getString("content")
             } else {
                 return@withContext "API Error: ${conn.responseCode}"
             }
