@@ -13,34 +13,33 @@ class TradingAnalyst(private val secureStorage: SecureStorage) {
 
     suspend fun analyzeMarket(symbol: String, timeframe: String, currentPrice: Double): String = withContext(Dispatchers.IO) {
         val apiKey = secureStorage.getApiKey("openai") 
-            ?: return@withContext "OpenAI API Key not found."
+            ?: return@withContext "API Key not found. Please set it in Settings."
 
         try {
-            val url = URL("https://api.openai.com/v1/chat/completions")
+            val url = URL("https://openrouter.ai/api/v1/chat/completions")
             val conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
             conn.setRequestProperty("Content-Type", "application/json")
             conn.setRequestProperty("Authorization", "Bearer $apiKey")
+            conn.setRequestProperty("HTTP-Referer", "https://github.com")
+            conn.setRequestProperty("X-Title", "SathiAI")
             conn.doOutput = true
 
             val systemPrompt = """
                 You are SathiAI, a professional Gold and Global Market Trading Analyst.
                 Analyze the market for $symbol on the $timeframe timeframe. Current price is $currentPrice.
-                Provide a detailed analysis using the following structure:
-                1. Market Structure & Trend (Higher Highs/Lows)
-                2. Key Levels: Support, Resistance, Supply/Demand, Order Blocks
-                3. Indicators: RSI, MACD, Bollinger Bands, VWAP, ATR, Ichimoku
-                4. Fibonacci Levels
-                5. Candlestick Patterns
-                6. News & Global Market Impact (DXY, US10Y)
-                7. Consensus: Provide a BUY or SELL analytical scenario with Confidence (0-100%).
-                8. Risk Management: Suggest a possible Stop Loss and Take Profit levels.
-                IMPORTANT: You are an analyst, NOT a broker. Never say "Execute this trade". 
-                Provide the analysis in Bengali language.
+                Provide a brief analysis (in Bengali):
+                1. Trend (Uptrend/Downtrend/Sideways)
+                2. Key Support and Resistance levels
+                3. RSI and MACD overview
+                4. BUY/SELL Scenario with Confidence (0-100%).
+                
+                IMPORTANT: You are an analyst. Never say "Execute this trade". 
+                End your response exactly with: "This is not investment advice."
             """.trimIndent()
 
             val jsonBody = JSONObject().apply {
-                put("model", "gpt-4")
+                put("model", "deepseek/deepseek-r1:free")
                 put("messages", org.json.JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
