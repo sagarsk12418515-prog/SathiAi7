@@ -13,7 +13,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(
+    onChatClick: () -> Unit,
+    onSettingsClick: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -42,7 +45,7 @@ fun HomeScreen() {
 
         // চ্যাট বাটন
         Button(
-            onClick = { /* ভবিষ্যতে চ্যাট স্ক্রিনে নিয়ে যাবে */ },
+            onClick = onChatClick,
             modifier = Modifier.fillMaxWidth().height(56.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF80CBC4)),
             shape = RoundedCornerShape(16.dp)
@@ -60,6 +63,13 @@ fun HomeScreen() {
             shape = RoundedCornerShape(16.dp)
         ) {
             Text(text = "গোল্ড ট্রেডিং অ্যানালাইসিস", color = Color(0xFF80CBC4), fontSize = 18.sp)
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // সেটিংস বাটন
+        TextButton(onClick = onSettingsClick) {
+            Text("সেটিংস (API Key দিন)", color = Color.Gray)
         }
     }
 }
