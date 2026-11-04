@@ -15,12 +15,13 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun HomeScreen(
     onChatClick: () -> Unit,
+    onTradingClick: () -> Unit,
     onSettingsClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF0E1513)) // ডার্ক থিম ব্যাকগ্রাউন্ড
+            .background(Color(0xFF0E1513))
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -57,7 +58,7 @@ fun HomeScreen(
 
         // ট্রেডিং বাটন
         Button(
-            onClick = { /* ভবিষ্যতে ট্রেডিং স্ক্রিনে নিয়ে যাবে */ },
+            onClick = onTradingClick,
             modifier = Modifier.fillMaxWidth().height(56.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1E2A27)),
             shape = RoundedCornerShape(16.dp)
